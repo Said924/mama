@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Для мамы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2a0a16;--bg2:#4a1428;--heart:#ff4d79;--glow:#ff8fab;--text:#ffe3ea;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 50% 40%,var(--bg2),var(--bg) 70%);color:var(--text);font-family:"Marck Script","Segoe Script",cursive;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;cursor:pointer;user-select:none}
+svg{width:min(52vw,260px);filter:drop-shadow(0 0 28px var(--glow));animation:beat 1.4s ease-in-out infinite}
+.outline{fill:none;stroke:var(--text);stroke-width:3;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 2.2s .2s ease forwards}
+.fill{fill:var(--heart);opacity:0;animation:fill 1s 2s ease forwards}
+h1{font-size:clamp(2.6rem,11vw,5rem);font-weight:400;margin:.4em 0 .1em;opacity:0;animation:rise 1.2s 2.6s ease forwards}
+p{font-size:clamp(1.2rem,4.5vw,1.8rem);margin:0 1rem;opacity:0;animation:rise 1.2s 3.4s ease forwards}
+small{position:absolute;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));opacity:.5;font-size:1rem}
+.f{position:fixed;bottom:-40px;color:var(--heart);pointer-events:none;animation:up linear forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fill{to{opacity:1}}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){svg,.f{animation:none}.outline{animation:none;stroke-dashoffset:0}.fill,h1,p{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 200 180" aria-hidden="true">
+<path class="fill" d="M100 168C40 118 8 88 8 52 8 28 27 10 51 10c20 0 40 12 49 32 9-20 29-32 49-32 24 0 43 18 43 42 0 36-32 66-92 116z"/>
+<path class="outline" d="M100 168C40 118 8 88 8 52 8 28 27 10 51 10c20 0 40 12 49 32 9-20 29-32 49-32 24 0 43 18 43 42 0 36-32 66-92 116z"/>
+</svg>
+<h1 id="t">Люблю тебя!</h1>
+<p id="s">Мамочка, ты — самое тёплое, что у меня есть</p>
+<small>нажми на экран</small>
+<script>
+function heart(x){
+  const e=document.createElement('span');e.className='f';e.textContent='♥';
+  e.style.left=(x??Math.random()*100)+(x?'px':'vw');
+  e.style.fontSize=(14+Math.random()*30)+'px';
+  e.style.animationDuration=(5+Math.random()*5)+'s';
+  document.body.appendChild(e);setTimeout(()=>e.remove(),10500);
+}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  setInterval(()=>heart(),500);
+  document.addEventListener('pointerdown',ev=>{for(let i=0;i<6;i++)heart(ev.clientX+(i-3)*14)});
+}
+fetch('/api/love').then(r=>r.json()).then(d=>{
+  document.getElementById('t').textContent=d.title;
+  document.getElementById('s').textContent=d.sub;
+}).catch(()=>{});
+</script>
+</body>
+</html>
